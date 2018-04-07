@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Block OR Not</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="./" class="center brand-logo">Block OR Not</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <p>They know too much, should we block them?</p>
+            </div>
+        </div>
+
+        % for _, category in output.items():
+        <div
+         class="row category"
+         data-_category_id="{{category['category_id']}}"
+         data-_name="{{category['name']}}">
+            <div class="col s12">
+                <div class="card blue">
+                    <div class="card-image">
+                        <img style="visibility: hidden" height="100" />
+                        <span class="card-title">{{category['name']}}</span>
+                        <a class="refresh btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">refresh</i></a>
+                    </div>
+                    <div class="card-content white">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Website</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                % for website in category['website_list']:
+                                <tr
+                                 data-_website_uri="{{website['website_uri']}}"
+                                 data-_country="{{website['country']}}"
+                                 data-_category_id="{{website['category_id']}}"
+                                 data-_search_input="{{website['search_input']}}"
+                                 data-_anomaly="{{website['content']['results'][0]['anomaly']}}"
+                                 data-_failure="{{website['content']['results'][0]['failure']}}"
+                                 data-_confirmed="{{website['content']['results'][0]['confirmed']}}">
+                                    <td>{{website['website_uri']}}</td>
+                                    % if website['content']['results'][0]['anomaly']:
+                                    <td class="red lighten-5 red-text text-darken-4">BLOCK</td>
+                                    % else:
+                                    <td class="green lighten-5 green-text text-darken-4">OK</td>
+                                    % end
+                                </tr>
+                                % end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        % end
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script type="text/javascript" src="./static/app.js"></script>
+</body>
+</html>
