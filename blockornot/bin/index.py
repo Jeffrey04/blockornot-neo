@@ -126,6 +126,7 @@ if __name__ == '__main__':
     background_task.start()
 
     bottle.run(port=os.environ.get('APP_PORT', 80),
+               host='0.0.0.0',
                debug=True)
 
     background_task.terminate()
