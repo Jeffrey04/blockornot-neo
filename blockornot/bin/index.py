@@ -29,12 +29,10 @@ def cache_updater():
 
 @bottle.route('/.well-known/<path:path>')
 def site_letsencrypt(path):
-    print('./static/{}'.format(path))
     return bottle.static_file(path, root='./.well-known/')
 
 @bottle.route('/static/<path:path>')
 def site_static(path):
-    print('./static/{}'.format(path))
     return bottle.static_file(path, root='./static/')
 
 @bottle.route('/')
