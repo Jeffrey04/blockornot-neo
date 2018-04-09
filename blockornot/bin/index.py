@@ -27,9 +27,12 @@ def cache_updater():
 
             time.sleep(30)
 
+@bottle.route('/.well-known/<path:path>')
+def site_letsencrypt(path):
+    return bottle.static_file(path, root='/var/lib/blockornot-cert/.well-known')
+
 @bottle.route('/static/<path:path>')
 def site_static(path):
-    print('./static/{}'.format(path))
     return bottle.static_file(path, root='./static/')
 
 @bottle.route('/')

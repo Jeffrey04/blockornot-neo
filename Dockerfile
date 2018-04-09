@@ -7,7 +7,8 @@ ENV APP_ANALYTICS=foo
 RUN \
     pip install bottle ujson requests && \
     mkdir /opt/blockornot && \
-    mkdir /var/lib/blockornot
+    mkdir /var/lib/blockornot && \
+    mkdir /var/lib/blockornot-cert
 
 COPY ./blockornot /opt/blockornot
 
