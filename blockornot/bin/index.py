@@ -60,7 +60,7 @@ def site_index():
             for site in cur.fetchall():
                 result[site['category_id']]['website_list'] = result[site['category_id']]['website_list'] + (dict(site, content=ujson.loads(site['content'])), )
 
-    return bottle.template('./templates/index.phtml', output=result)
+    return bottle.template('./templates/index.phtml', output=result, tracking_code=os.environ.get('APP_ANALYTICS', 'FOO'))
 
 def _database_connect():
     conn = sqlite3.connect(os.environ.get('APP_DB', './db/database.db'))
