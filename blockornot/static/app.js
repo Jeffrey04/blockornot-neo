@@ -216,7 +216,7 @@
             } else {
               $(this).append(
                 $("<td>OK</td>").addClass(
-                  "green lighten-5 green-text text-darken-4"
+                  "center-align green lighten-5 green-text text-darken-4"
                 )
               );
             }
