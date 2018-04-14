@@ -6,12 +6,15 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+    <header>
     <nav>
-        <div class="nav-wrapper">
+        <div class="nav-wrapper amber darken-4">
             <a href="./" class="center brand-logo">Block OR Not</a>
         </div>
     </nav>
+    </header>
 
+    <main>
     <div class="container">
         <div class="row">
             <div class="col s12">
@@ -25,11 +28,11 @@
          data-_category_id="{{category['category_id']}}"
          data-_name="{{category['name']}}">
             <div class="col s12">
-                <div class="card blue">
+                <div class="card amber">
                     <div class="card-image">
                         <img style="visibility: hidden" height="100" />
-                        <span class="card-title">{{category['name']}}</span>
-                        <a class="refresh btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">refresh</i></a>
+                        <span class="card-title blue-grey-text text-darken-4">{{category['name']}}</span>
+                        <a class="refresh btn-floating halfway-fab waves-effect waves-light amber darken-3"><i class="material-icons">refresh</i></a>
                     </div>
                     <div class="card-content white">
                         <table>
@@ -57,7 +60,7 @@
                                     % if website['content']['results'][0]['anomaly']:
                                     <td class="red lighten-5 red-text text-darken-4">BLOCK</td>
                                     % else:
-                                    <td class="green lighten-5 green-text text-darken-4">OK</td>
+                                    <td class="center-align green lighten-5 green-text text-darken-4">OK</td>
                                     % end
                                 </tr>
                                 % end
@@ -69,6 +72,38 @@
         </div>
         % end
     </div>
+    </main>
+
+    <footer class="page-footer blue-grey darken-4 grey-text text-lighten-5">
+    <div class="container">
+        <div class="row">
+            <div class="col s8">
+                <h5>Block OR Not</h5>
+                <p>Feel free to send us a feature request or pull requests via our <a href="https://github.com/Jeffrey04/blockornot-neo">github repository</a></p>
+            </div>
+            <div class="col s4">
+                <h5 class="white-text">Related Links</h5>
+                <ul>
+                  <li><a href="https://blockornot.today/">Home</a></li>
+                  <li><a href="https://sinarproject.org/">Sinar Project</a></li>
+                  <li><a href="https://github.com/Jeffrey04/blockornot-neo/">Our github repository</a></li>
+                  <li><a href="https://cilisos.my/how-to-unblock-sarawak-report-in-5-minutes/">Tips and tricks</a></li>
+                </ul>
+              </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <p>
+                    Site is hosted by <a href="https://coolsilon.com">coolsilon.com</a>. No rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </footer>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
