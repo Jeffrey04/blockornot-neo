@@ -168,6 +168,13 @@
         "redux:render": function() {
           if ($(this).data("website")) {
             $(this)
+              .find(".time")
+              .each(function() {
+                var instance = M.Tooltip.getInstance(this);
+
+                instance && instance.destroy();
+              })
+              .end()
               .empty()
               .append(
                 $(
@@ -183,6 +190,16 @@
                   '<td class="time">' +
                     moment($(this).data("website").time).fromNow() +
                     "</td>"
+                ).each(
+                  _.partial(function(context) {
+                    M.Tooltip.init(this, {
+                      position: "left",
+                      html: $(context).data("website").time,
+                      enterDelay: 100,
+                      inDuration: 150,
+                      outDuration: 50
+                    });
+                  }, this)
                 )
               )
               .trigger("app:render_status");
