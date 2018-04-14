@@ -65,10 +65,21 @@
         .on("redux:mapper_update", function(e) {
           e.preventDefault();
 
-          state_mapper &&
-            $(this).data(state_mapper.call(this, store.getState()));
+          var incoming = state_mapper
+            ? state_mapper.call(this, store.getState())
+            : null;
+
+          state_mapper && $(this).data(incoming);
+
+          if (!_.isEqual($(this).data("__current__"), incoming)) {
+            $(this).trigger("redux:render");
+          }
+
+          $(this).data("__current__", incoming);
         })
         .each(function() {
+          $(this).data("__current__", null);
+
           store.subscribe(
             _.bind($(this).trigger, $(this), "redux:mapper_update")
           );
@@ -81,8 +92,6 @@
               },
               this
             );
-
-          store.subscribe(_.bind($(this).trigger, $(this), "redux:render"));
         });
     };
   }, Redux.createStore(reducer));
