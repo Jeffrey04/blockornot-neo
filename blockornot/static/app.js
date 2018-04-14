@@ -169,10 +169,18 @@
           if ($(this).data("website")) {
             $(this)
               .empty()
-              .append($("<td>" + $(this).data("website").website_uri + "</td>"))
               .append(
                 $(
-                  "<td>" +
+                  '<td><a href="http://' +
+                    $(this).data("website").website_uri +
+                    '">' +
+                    $(this).data("website").website_uri +
+                    "</a></td>"
+                )
+              )
+              .append(
+                $(
+                  '<td class="time">' +
                     moment($(this).data("website").time).fromNow() +
                     "</td>"
                 )
