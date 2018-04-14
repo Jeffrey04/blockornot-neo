@@ -36,6 +36,7 @@
                             <thead>
                                 <tr>
                                     <th>Website</th>
+                                    <th>Time</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -49,8 +50,10 @@
                                  data-_search_input="{{website['search_input']}}"
                                  data-_anomaly="{{website['content']['results'][0]['anomaly']}}"
                                  data-_failure="{{website['content']['results'][0]['failure']}}"
+                                 data-time="{{website['content']['results'][0]['measurement_start_time']}}"
                                  data-_confirmed="{{website['content']['results'][0]['confirmed']}}">
                                     <td>{{website['website_uri']}}</td>
+                                    <td>{{website['content']['results'][0]['measurement_start_time']}}}}</td>
                                     % if website['content']['results'][0]['anomaly']:
                                     <td class="red lighten-5 red-text text-darken-4">BLOCK</td>
                                     % else:
