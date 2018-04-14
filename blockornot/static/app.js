@@ -189,15 +189,6 @@
 
   connect(
     function(state) {
-      console.log(
-        $(this).data("_website_uri"),
-        _.filter(
-          state.querying,
-          _.bind(function(website) {
-            return website.website_uri === $(this).data("_website_uri");
-          }, this)
-        )
-      );
       return {
         website: state.website[$(this).data("_website_uri")] || false,
         is_querying:
