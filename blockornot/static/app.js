@@ -123,7 +123,8 @@
                       _.assign({}, website, {
                         anomaly: data.results[0].anomaly,
                         failure: data.results[0].failure,
-                        confirmed: data.results[0].confirmed
+                        confirmed: data.results[0].confirmed,
+                        time: data.results[0].measurement_start_time
                       })
                     )
                   );
@@ -160,7 +161,13 @@
             $(this)
               .empty()
               .append($("<td>" + $(this).data("website").website_uri + "</td>"))
-              .append($("<td>" + $(this).data("website").time + "</td>"))
+              .append(
+                $(
+                  "<td>" +
+                    moment($(this).data("website").time).fromNow() +
+                    "</td>"
+                )
+              )
               .trigger("app:render_status");
           }
         },
