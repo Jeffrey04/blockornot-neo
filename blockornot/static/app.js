@@ -9,6 +9,9 @@
       case "CATEGORY_UPDATE":
         result = category_update(state, action);
         break;
+      case "QUERYING_ADD":
+        result = querying_add(state, action);
+        break;
       default:
         result = state;
     }
@@ -26,13 +29,22 @@
     });
   }
 
+  function querying_add(state, action) {
+    return _.assign({}, state, {
+      querying: (state.querying || []).concat(action.website)
+    });
+  }
+
   function website_update(state, action) {
     return _.assign({}, state, {
       website: _.assign(
         {},
         state.website,
         _.object([[action.website.website_uri, action.website]])
-      )
+      ),
+      querying: _.filter(state.querying || [], function(_current) {
+        return _current.website_uri !== action.website.website_uri;
+      })
     });
   }
 
@@ -40,6 +52,13 @@
     return {
       type: "CATEGORY_UPDATE",
       category: category
+    };
+  }
+
+  function make_querying_add(website) {
+    return {
+      type: "QUERYING_ADD",
+      website: website
     };
   }
 
@@ -65,10 +84,21 @@
         .on("redux:mapper_update", function(e) {
           e.preventDefault();
 
-          state_mapper &&
-            $(this).data(state_mapper.call(this, store.getState()));
+          var incoming = state_mapper
+            ? state_mapper.call(this, store.getState())
+            : null;
+
+          state_mapper && $(this).data(incoming);
+
+          if (!_.isEqual($(this).data("__current__"), incoming)) {
+            $(this).trigger("redux:render");
+          }
+
+          $(this).data("__current__", incoming);
         })
         .each(function() {
+          $(this).data("__current__", null);
+
           store.subscribe(
             _.bind($(this).trigger, $(this), "redux:mapper_update")
           );
@@ -81,8 +111,6 @@
               },
               this
             );
-
-          store.subscribe(_.bind($(this).trigger, $(this), "redux:render"));
         });
     };
   }, Redux.createStore(reducer));
@@ -100,17 +128,28 @@
                 .data("_category_id")
             );
           }, this)
-        )
+        ),
+        disable_click: (state.querying || []).length > 0
       };
     },
     function(dispatch) {
       return {
+        "redux:render": function() {
+          $(this).removeClass("disabled");
+
+          if ($(this).data("disable_click")) {
+            $(this).addClass("disabled");
+          }
+        },
+
         click: function(e) {
           e.preventDefault();
 
           _.each(
             $(this).data("website"),
             function(website) {
+              dispatch(make_querying_add(website));
+
               $.get({
                 url: "https://api.ooni.io/api/v1/measurements",
                 data: {
@@ -150,8 +189,24 @@
 
   connect(
     function(state) {
+      console.log(
+        $(this).data("_website_uri"),
+        _.filter(
+          state.querying,
+          _.bind(function(website) {
+            return website.website_uri === $(this).data("_website_uri");
+          }, this)
+        )
+      );
       return {
-        website: state.website[$(this).data("_website_uri")] || false
+        website: state.website[$(this).data("_website_uri")] || false,
+        is_querying:
+          _.filter(
+            state.querying,
+            _.bind(function(website) {
+              return website.website_uri === $(this).data("_website_uri");
+            }, this)
+          ).length > 0
       };
     },
     function(dispatch) {
@@ -159,32 +214,61 @@
         "redux:render": function() {
           if ($(this).data("website")) {
             $(this)
+              .find(".time")
+              .each(function() {
+                var instance = M.Tooltip.getInstance(this);
+
+                instance && instance.destroy();
+              })
+              .end()
               .empty()
-              .append($("<td>" + $(this).data("website").website_uri + "</td>"))
               .append(
                 $(
-                  "<td>" +
+                  '<td><a class="orange-text text-darken-4" href="http://' +
+                    $(this).data("website").website_uri +
+                    '">' +
+                    $(this).data("website").website_uri +
+                    "</a></td>"
+                )
+              )
+              .append(
+                $(
+                  '<td class="time">' +
                     moment($(this).data("website").time).fromNow() +
                     "</td>"
+                ).each(
+                  _.partial(function(context) {
+                    M.Tooltip.init(this, {
+                      position: "left",
+                      html: $(context).data("website").time,
+                      enterDelay: 100,
+                      inDuration: 150,
+                      outDuration: 50
+                    });
+                  }, this)
                 )
               )
               .trigger("app:render_status");
           }
         },
         "app:render_status": function() {
-          if ($(this).data("website")) {
-            if ($(this).data("website").anomaly) {
-              $(this).append(
-                $("<td>BLOCK</td>").addClass(
-                  "red lighten-5 red-text text-darken-4"
-                )
-              );
-            } else {
-              $(this).append(
-                $("<td>OK</td>").addClass(
-                  "green lighten-5 green-text text-darken-4"
-                )
-              );
+          if ($(this).data("is_querying") || false) {
+            $(this).append($("<td />").append($("#preloader").html()));
+          } else {
+            if ($(this).data("website")) {
+              if ($(this).data("website").anomaly) {
+                $(this).append(
+                  $("<td>BLOCK</td>").addClass(
+                    "red lighten-5 red-text text-darken-4"
+                  )
+                );
+              } else {
+                $(this).append(
+                  $("<td>OK</td>").addClass(
+                    "center-align green lighten-5 green-text text-darken-4"
+                  )
+                );
+              }
             }
           }
         }
